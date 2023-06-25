@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Gute Nacht Geschichtengenerator</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="index.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+
+<body>
+  <header>
+    <a href="#">Home</a>
+    <a href="#">Kontakt</a>
+    <a href="#">Impressum</a>
+  </header>
+  <h1>Gute Nacht Geschichtengenerator</h1>
+  <form id="story-form">
+    <label for="main_character">Hauptfigur:</label>
+    <input type="text" id="main_character" name="main_character" required><br>
+    <label for="theme">Thema:</label>
+    <input type="text" id="theme" name="theme" required><br>
+    <label for="setting">Schauplatz:</label>
+    <input type="text" id="setting" name="setting" required><br>
+    <label for="additional_wishes">Zusätzliche Wünsche:</label>
+    <input type="text" id="additional_wishes" name="additional_wishes"><br>
+    <button type="submit">Geschichte generieren</button>
+  </form>
+  <div id="loading" style="display: none;">Geschichte wird geschrieben...</div>
+  <div id="story"></div>
+  <script>
+    $("#story-form").submit(function(event) {
+      event.preventDefault();
+      const main_character = $("#main_character").val();
+      const theme = $("#theme").val();
+      const setting = $("#setting").val();
+      const additional_wishes = $("#additional_wishes").val();
+
+      $("#story").empty();
+      $("#loading").show();
+
+      $.ajax({
+        type: "POST",
+        url: "/generate-story",
+        contentType: "application/json",
+        data: JSON.stringify({ main_character, theme, setting, additional_wishes }),
+        success: function(data) {
+          $("#loading").hide();
+          $("#story").text(data.story);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
